@@ -11,25 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('post_comments', function (Blueprint $table) {
             $table->char('id', 36)->primary();
-            $table->string('first_name', 64);
-            $table->string('last_name', 64);
-            $table->string('email', 128)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', ['A', 'U'])->comment('Admin, User');
-            $table->string('password', 64);
-            $table->string('phone', 15)->nullable();
-            $table->enum('status', ['P', 'A', 'R'])->default('P');
-            $table->string('token', 32)->nullable();
-            $table->string('profile_image_url', 128)->nullable();
-            $table->rememberToken();
+            $table->char('post_id', 36);
+            $table->char('user_id', 36);
+            $table->char('comment_id', 36)->nullable();
+            $table->longText('comment');
+
+            $table->foreign('post_id')->references('id')->on('posts')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->char('created_by', 36)->nullable();
             $table->char('updated_by', 36)->nullable();
             $table->char('deleted_by', 36)->nullable();
             $table->timestamps(); // Adds created_at and updated_at columns
             $table->softDeletes(); // Adds deleted_at Datatype Timestamps
+        });
+
+        Schema::table('post_comments', function (Blueprint $table) {
+            $table->foreign('comment_id')->references('id')->on('post_comments')->cascadeOnDelete()->cascadeOnUpdate();;
         });
     }
 
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('post_comments');
     }
 };

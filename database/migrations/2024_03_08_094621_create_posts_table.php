@@ -11,25 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->char('id', 36)->primary();
-            $table->string('first_name', 64);
-            $table->string('last_name', 64);
-            $table->string('email', 128)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', ['A', 'U'])->comment('Admin, User');
-            $table->string('password', 64);
-            $table->string('phone', 15)->nullable();
-            $table->enum('status', ['P', 'A', 'R'])->default('P');
-            $table->string('token', 32)->nullable();
-            $table->string('profile_image_url', 128)->nullable();
-            $table->rememberToken();
+            $table->char('user_id', 36);
+            $table->longText('bio')->nullable();
 
             $table->char('created_by', 36)->nullable();
             $table->char('updated_by', 36)->nullable();
             $table->char('deleted_by', 36)->nullable();
             $table->timestamps(); // Adds created_at and updated_at columns
             $table->softDeletes(); // Adds deleted_at Datatype Timestamps
+
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -38,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('posts');
     }
 };

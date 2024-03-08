@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('reports', function (Blueprint $table) {
             $table->char('id', 36)->primary();
-            $table->string('first_name', 64);
-            $table->string('last_name', 64);
-            $table->string('email', 128)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', ['A', 'U'])->comment('Admin, User');
-            $table->string('password', 64);
-            $table->string('phone', 15)->nullable();
-            $table->enum('status', ['P', 'A', 'R'])->default('P');
-            $table->string('token', 32)->nullable();
-            $table->string('profile_image_url', 128)->nullable();
-            $table->rememberToken();
+            $table->char('post_id', 36);
+            $table->uuid('reported_by');
+            $table->enum('reason', ['S', 'I', 'O', 'Oth'])->comment('S: Spam, I: Inappropriate, O: Offensive, Oth: Other');
+            $table->string('other_reason', 512)->nullable();
+
+            $table->foreign('post_id')->references('id')->on('posts')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('reported_by')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->char('created_by', 36)->nullable();
             $table->char('updated_by', 36)->nullable();
@@ -38,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('reports');
     }
 };
