@@ -7,8 +7,8 @@ export default [
     icon: { icon: 'tabler-smart-home' },
   },
   {
-    title: 'Second page',
-    to: { name: 'second-page' },
-    icon: { icon: 'tabler-file' },
+    title: 'User List',
+    to: { name: 'user-list' },
+    icon: { icon: 'tabler-users' },
   },
 ] as VerticalNavItems
