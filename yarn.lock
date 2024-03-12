@@ -688,6 +688,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/crypto-js@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.npmjs.org/@types/crypto-js/-/crypto-js-4.2.2.tgz"
+  integrity sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==
+
 "@types/debug@^4.1.7":
   version "4.1.7"
   resolved "https://registry.npmjs.org/@types/debug/-/debug-4.1.7.tgz"
@@ -896,6 +901,39 @@
     "@ucast/core" "^1.6.1"
     "@ucast/js" "^3.0.0"
     "@ucast/mongo" "^2.4.0"
+
+"@unhead/dom@1.8.12":
+  version "1.8.12"
+  resolved "https://registry.npmjs.org/@unhead/dom/-/dom-1.8.12.tgz"
+  integrity sha512-1A94VyVX/yxBXmZR1mvxvmhhbgF72dUDcmsmoyXOiobd3Zt2rJLu19Ih8jy35CDR4oUAWzK+o6HO1vWzY4wGAQ==
+  dependencies:
+    "@unhead/schema" "1.8.12"
+    "@unhead/shared" "1.8.12"
+
+"@unhead/schema@1.8.12":
+  version "1.8.12"
+  resolved "https://registry.npmjs.org/@unhead/schema/-/schema-1.8.12.tgz"
+  integrity sha512-sUkjvRGaAN0NCvZtB7VtyC5pUdYQAutHtmKbEK79nfPfb2Z7kFT1nysIno13ivybeq98l4Ge1o4crVuTwGHhTw==
+  dependencies:
+    hookable "^5.5.3"
+    zhead "^2.2.4"
+
+"@unhead/shared@1.8.12":
+  version "1.8.12"
+  resolved "https://registry.npmjs.org/@unhead/shared/-/shared-1.8.12.tgz"
+  integrity sha512-3pP1cYSH22UeCvvVyAVkh7Nfo2GwWDuO/h/31I2eVl5oVvmb0vZx7Ff47RlfKDMkfN7ddKaRwkLaYAR+hNNWsQ==
+  dependencies:
+    "@unhead/schema" "1.8.12"
+
+"@unhead/vue@^1.8.12":
+  version "1.8.12"
+  resolved "https://registry.npmjs.org/@unhead/vue/-/vue-1.8.12.tgz"
+  integrity sha512-26D+3SIfJwTx1PgPa+urjJ5agImucevSS5pwXMTYHQOK45ip+TTAealrRTbMmAkvaw+KK6Su9OaCzlYVJnmDOQ==
+  dependencies:
+    "@unhead/schema" "1.8.12"
+    "@unhead/shared" "1.8.12"
+    hookable "^5.5.3"
+    unhead "1.8.12"
 
 "@vitejs/plugin-vue-jsx@3.0.1":
   version "3.0.1"
@@ -1389,7 +1427,7 @@ axios-mock-adapter@1.21.4:
     fast-deep-equal "^3.1.3"
     is-buffer "^2.0.5"
 
-"axios@>= 0.17.0", axios@1.4.0:
+axios@^1.4.0, "axios@>= 0.17.0":
   version "1.4.0"
   resolved "https://registry.npmjs.org/axios/-/axios-1.4.0.tgz"
   integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
@@ -1690,6 +1728,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 css-declaration-sorter@^6.3.1:
   version "6.4.0"
@@ -2971,6 +3014,11 @@ he@^1.2.0:
   resolved "https://registry.npmjs.org/he/-/he-1.2.0.tgz"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
+hookable@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.npmjs.org/hookable/-/hookable-5.5.3.tgz"
+  integrity sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==
+
 hosted-git-info@^2.1.4:
   version "2.8.9"
   resolved "https://registry.npmjs.org/hosted-git-info/-/hosted-git-info-2.8.9.tgz"
@@ -4020,6 +4068,11 @@ perfect-scrollbar@^1.5.5:
   resolved "https://registry.npmjs.org/perfect-scrollbar/-/perfect-scrollbar-1.5.5.tgz"
   integrity sha512-dzalfutyP3e/FOpdlhVryN4AJ5XDVauVWxybSkLZmakFE2sS3y3pc4JnSprw8tGmHvkaG5Edr5T7LBTZ+WWU2g==
 
+picocolors@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/picocolors/-/picocolors-0.2.1.tgz"
+  integrity sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA==
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.0.0.tgz"
@@ -4324,7 +4377,15 @@ postcss-value-parser@^4.2.0:
   resolved "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^7.0.1, postcss@^8.0.9, postcss@^8.1.10, postcss@^8.2.15, postcss@^8.2.2, postcss@^8.3.11, postcss@^8.3.3, postcss@^8.3.9, postcss@^8.4.0, postcss@^8.4.19, postcss@^8.4.23:
+postcss@^7.0.1:
+  version "7.0.39"
+  resolved "https://registry.npmjs.org/postcss/-/postcss-7.0.39.tgz"
+  integrity sha512-yioayjNbHn6z1/Bywyb2Y4s3yvDAeXGOyxqD+LnVOinq6Mdmd++SW2wUNVzavyyHxd6+DxzWGIuosg6P1Rj8uA==
+  dependencies:
+    picocolors "^0.2.1"
+    source-map "^0.6.1"
+
+postcss@^8.0.9, postcss@^8.1.10, postcss@^8.2.15, postcss@^8.2.2, postcss@^8.3.11, postcss@^8.3.3, postcss@^8.3.9, postcss@^8.4.0, postcss@^8.4.19, postcss@^8.4.23:
   version "8.4.23"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.23.tgz"
   integrity sha512-bQ3qMcpF6A/YjR55xtoTr0jGOlnPOKAIMdOWiv0EIT6HVPEaJiJB4NLljSbiHoC2RX7DN5Uvjtpbg1NPdwv1oA==
@@ -5134,6 +5195,16 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
+unhead@1.8.12:
+  version "1.8.12"
+  resolved "https://registry.npmjs.org/unhead/-/unhead-1.8.12.tgz"
+  integrity sha512-O7YPZo1QtNo24Cv9cXiewB74feARf7v8fCmYWQiY3w0z/7oig1kOoGJub6y2XuusQMZpSX56/GDRmog0IZldeA==
+  dependencies:
+    "@unhead/dom" "1.8.12"
+    "@unhead/schema" "1.8.12"
+    "@unhead/shared" "1.8.12"
+    hookable "^5.5.3"
+
 unimport@^3.0.6:
   version "3.0.6"
   resolved "https://registry.npmjs.org/unimport/-/unimport-3.0.6.tgz"
@@ -5377,7 +5448,7 @@ vue-tsc@1.6.2:
     "@volar/vue-typescript" "1.6.2"
     semver "^7.3.8"
 
-"vue@^2.6.12 || ^3.2.4", "vue@^2.6.14 || ^3.2.0", "vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", vue@^3.0.11, vue@^3.2.0, vue@^3.2.25, "vue@> 3.0.0", vue@>=3, vue@>=3.0.0, "vue@2 || 3", vue@3.2.47:
+"vue@^2.6.12 || ^3.2.4", "vue@^2.6.14 || ^3.2.0", "vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", vue@^3.0.11, vue@^3.2.0, vue@^3.2.25, "vue@> 3.0.0", "vue@>=2.7 || >=3", vue@>=3, vue@>=3.0.0, vue@>=3.2.0, "vue@2 || 3", vue@3.2.47:
   version "3.2.47"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.47.tgz"
   integrity sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==
@@ -5401,6 +5472,11 @@ vue3-perfect-scrollbar@1.6.1:
     cssnano "^5.1.14"
     perfect-scrollbar "^1.5.5"
     postcss-import "^12.0.0"
+
+vue3-toastify@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/vue3-toastify/-/vue3-toastify-0.2.1.tgz"
+  integrity sha512-u4i5LCu1q5qs4L4Kbjb4u8NipCS8ox1fCHQ6XFS62676xnA6Q/AJRpZEkAurTMp723LeH6eQX6k9+24bKf1T4Q==
 
 vuetify@^3.0.0-beta.4, vuetify@3.2.1:
   version "3.2.1"
@@ -5565,3 +5641,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zhead@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/zhead/-/zhead-2.2.4.tgz"
+  integrity sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==
