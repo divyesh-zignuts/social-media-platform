@@ -29,24 +29,30 @@ class AuthController extends Controller
         // Extract email and password from the request
         $user = User::where('email', $credential['email'])->first();
 
-        // Check if the user exists and the provided password matches
-        if ($user && Hash::check($credential['password'], $user->password)) {
+        if ($user->status === 'A') {
+            // Check if the user exists and the provided password matches
+            if ($user && Hash::check($credential['password'], $user->password)) {
 
-            // Attempt authentication using the credentials
-            if (Auth::attempt($credential)) {
+                // Attempt authentication using the credentials
+                if (Auth::attempt($credential)) {
 
-                // Create a token for the authenticated user
-                $token = $user->createToken('AuthToken')->plainTextToken;
+                    // Create a token for the authenticated user
+                    $token = $user->createToken('AuthToken')->plainTextToken;
 
-                $user->update(['api_token' => $token]);
+                    $user->update(['api_token' => $token]);
 
-                // Return success response with user and token information
-                return ok(__('strings.success', ['name' => 'User login']), [
-                    'user'  => $user,
-                    'token' => $token
-                ]);
+                    // Return success response with user and token information
+                    return ok(__('strings.success', ['name' => 'User login']), [
+                        'user'  => $user,
+                        'token' => $token
+                    ]);
+                }
             }
+        } else {
+            // Return error
+            return error(__('strings.inactive'), [], 'loginCase');
         }
+
 
         // Return error response for invalid credentials or user not found
         return error(__('strings.invalid_credentials'), [], 'loginCase');

@@ -19,8 +19,9 @@ Route::namespace('API')->group(function () {
 
         Route::controller('UserController')->prefix('user')->group(function () {
             Route::post('list', 'list');
-            Route::get('edit/{id}', 'edit');
+            Route::get('profile/{id}', 'profile');
             Route::get('delete/{id}', 'delete');
+            Route::post('statusChange', 'statusChange');
         });
     });
 });
