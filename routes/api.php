@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\PostController;
 
 
 Route::namespace('API')->group(function () {
@@ -22,6 +23,14 @@ Route::namespace('API')->group(function () {
             Route::get('profile/{id}', 'profile');
             Route::get('delete/{id}', 'delete');
             Route::post('statusChange', 'statusChange');
+        });
+
+        Route::controller('PostController')->prefix('post')->group(function () {
+            Route::get('list', 'index');
+            Route::post('create', 'create');
+            Route::get('edit/{id}', 'edit');
+            Route::post('update/{id}', 'update');
+            Route::post('destroy/{id}', 'destroy');
         });
     });
 });
