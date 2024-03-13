@@ -21,7 +21,7 @@ class Post extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'bio', 'created_by', 'updated_by', 'deleted_by',
+        'user_id', 'bio', 'created_by', 'updated_by', 'deleted_by',
     ];
 
     public function user()

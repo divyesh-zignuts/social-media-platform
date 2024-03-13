@@ -16,7 +16,7 @@ class PostAsset extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'type', 'asset_url', 'created_by', 'updated_by', 'deleted_by',
+        'post_id', 'type', 'asset_url', 'created_by', 'updated_by', 'deleted_by',
     ];
 
     public function post()
