@@ -2,6 +2,7 @@
 import DialogBox from "@/components/DialogBox.vue";
 import axios from '@axios';
 import { useHead } from '@unhead/vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
@@ -199,7 +200,7 @@ onMounted(async () => {
                   </template>
 
                   <VCard>
-                    <VList v-for="i in actionsItems" :key="i?.id" class="pa-1">
+                    <VList v-for="i in actionsItems" :key="i?.id">
                       <VListItem @click="handleAction(i, item.props.title.id)">
                         <template #title>
                           {{ i?.title }}

@@ -7,8 +7,13 @@ export default [
     icon: { icon: 'tabler-smart-home' },
   },
   {
-    title: 'User List',
+    title: 'Users',
     to: { name: 'user-list' },
     icon: { icon: 'tabler-users' },
+  },
+  {
+    title: 'Posts',
+    to: { name: 'post-list' },
+    icon: { icon: 'tabler-wallpaper' },
   },
 ] as VerticalNavItems

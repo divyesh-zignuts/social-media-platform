@@ -43,7 +43,7 @@ const getUserLabel = computed(() => {
           <VCol cols="8">
             <div class="d-flex">
               <div class="personal-details__keys">
-                Name of Respondent:
+                Name:
               </div>
               <div class="personal-details__values">
                 {{ props?.userData?.first_name }}

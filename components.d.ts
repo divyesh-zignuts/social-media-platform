@@ -342,6 +342,7 @@ declare module '@vue/runtime-core' {
     EnableOneTimePasswordDialog: typeof import('./resources/ts/components/dialogs/EnableOneTimePasswordDialog.vue')['default']
     ErrorHeader: typeof import('./resources/ts/components/ErrorHeader.vue')['default']
     I18n: typeof import('./resources/ts/@core/components/I18n.vue')['default']
+    List: typeof import('./resources/ts/components/post/List.vue')['default']
     MoreBtn: typeof import('./resources/ts/@core/components/MoreBtn.vue')['default']
     Notifications: typeof import('./resources/ts/@core/components/Notifications.vue')['default']
     PersonalInformation: typeof import('./resources/ts/components/user/PersonalInformation.vue')['default']
