@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use finfo;
 use App\Models\Post;
-use App\Models\PostAsset;
 use App\Models\User;
-use App\Http\Controllers\Controller;
+use App\Models\PostAsset;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\FileUpload;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -18,8 +19,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $users  = User::whereNot('id', Auth::user()->id)->get();
-        $post   = Post::all();
+        $post = Post::select('id', 'user_id', 'bio')->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')->where('user_id', Auth::user()->id)->get();
 
         return ok(__('strings.success', ['name' => 'Posts list get']), [
             'post'     =>  $post
@@ -31,26 +31,26 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
-            'post_type' => 'required|in:I,V,G',
-            'post_file' => [
-                'required',
-                'array',
-                function ($attribute, $value, $fail) use ($request) {
-                    $post_type = $request->post_type;
-                    foreach ($value as $file) {
-                        if ($post_type === 'I' && !in_array($file->getMimeType(), ['image/png', 'image/jpeg', 'image/jpg'])) {
-                            $fail('The ' . $attribute . ' must be a valid PNG, JPG, or JPEG image.');
-                        } elseif ($post_type === 'V' && !in_array($file->getMimeType(), ['video/mp4', 'video/mpeg'])) {
-                            $fail('The ' . $attribute . ' must be a valid MP4 or MPEG video.');
-                        } elseif ($post_type === 'G' && $file->getMimeType() !== 'image/gif') {
-                            $fail('The ' . $attribute . ' must be a valid GIF image.');
-                        }
-                    }
-                },
-            ],
-            'bio'       => 'required|string',
-        ]);
+        // $request->validate([
+        //     'post_type' => 'required|in:I,V,G',
+        //     'post_file' => [
+        //         'required',
+        //         'array',
+        //         function ($attribute, $value, $fail) use ($request) {
+        //             $post_type = $request->post_type;
+        //             foreach ($value as $file) {
+        //                 if ($post_type === 'I' && !in_array($file->getMimeType(), ['image/png', 'image/jpeg', 'image/jpg'])) {
+        //                     $fail('The ' . $attribute . ' must be a valid PNG, JPG, or JPEG image.');
+        //                 } elseif ($post_type === 'V' && !in_array($file->getMimeType(), ['video/mp4', 'video/mpeg'])) {
+        //                     $fail('The ' . $attribute . ' must be a valid MP4 or MPEG video.');
+        //                 } elseif ($post_type === 'G' && $file->getMimeType() !== 'image/gif') {
+        //                     $fail('The ' . $attribute . ' must be a valid GIF image.');
+        //                 }
+        //             }
+        //         },
+        //     ],
+        //     'bio'       => 'required|string',
+        // ]);
 
         $post_type = $request->post_type === 'I' ? 'images' : ($request->post_type === 'V' ? 'videos' : (($request->post_type === 'G') ? 'gif' : null));
 
