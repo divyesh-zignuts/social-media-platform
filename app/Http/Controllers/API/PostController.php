@@ -52,26 +52,26 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        // $request->validate([
-        //     'post_type' => 'required|in:I,V,G',
-        //     'post_file' => [
-        //         'required',
-        //         'array',
-        //         function ($attribute, $value, $fail) use ($request) {
-        //             $post_type = $request->post_type;
-        //             foreach ($value as $file) {
-        //                 if ($post_type === 'I' && !in_array($file->getMimeType(), ['image/png', 'image/jpeg', 'image/jpg'])) {
-        //                     $fail('The ' . $attribute . ' must be a valid PNG, JPG, or JPEG image.');
-        //                 } elseif ($post_type === 'V' && !in_array($file->getMimeType(), ['video/mp4', 'video/mpeg'])) {
-        //                     $fail('The ' . $attribute . ' must be a valid MP4 or MPEG video.');
-        //                 } elseif ($post_type === 'G' && $file->getMimeType() !== 'image/gif') {
-        //                     $fail('The ' . $attribute . ' must be a valid GIF image.');
-        //                 }
-        //             }
-        //         },
-        //     ],
-        //     'bio'       => 'required|string',
-        // ]);
+        $request->validate([
+            'post_type' => 'required|in:I,V,G',
+            'post_file' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) use ($request) {
+                    $post_type = $request->post_type;
+                    foreach ($value as $file) {
+                        if ($post_type === 'I' && !in_array($file->getMimeType(), ['image/png', 'image/jpeg', 'image/jpg'])) {
+                            $fail('The ' . $attribute . ' must be a valid PNG, JPG, or JPEG image.');
+                        } elseif ($post_type === 'V' && !in_array($file->getMimeType(), ['video/mp4', 'video/mpeg'])) {
+                            $fail('The ' . $attribute . ' must be a valid MP4 or MPEG video.');
+                        } elseif ($post_type === 'G' && $file->getMimeType() !== 'image/gif') {
+                            $fail('The ' . $attribute . ' must be a valid GIF image.');
+                        }
+                    }
+                },
+            ],
+            'bio'       => 'required|string',
+        ]);
 
         $post_type = $request->post_type === 'I' ? 'images' : ($request->post_type === 'V' ? 'videos' : (($request->post_type === 'G') ? 'gif' : null));
 
@@ -218,16 +218,16 @@ class PostController extends Controller
 
     public function commentList(string $id)
     {
-        $comments = Post::select('id', 'user_id', 'bio')
+        $postComments = Post::select('id', 'user_id', 'bio')
             ->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')
             ->with(['comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
             }])
-            ->where('user_id', Auth::user()->id)
+            ->where('id', $id)
             ->get();
 
         return ok(__('strings.success', ['name' => 'Comment list get']), [
-            'comments'     =>  $comments
+            'postComments'     =>  $postComments
         ]);
     }
 
