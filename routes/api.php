@@ -31,6 +31,11 @@ Route::namespace('API')->group(function () {
             Route::get('edit/{id}', 'edit');
             Route::post('update/{id}', 'update');
             Route::post('destroy/{id}', 'destroy');
+            Route::get('likeUnlike/{id}', 'likeUnlike');
+            Route::post('commentAdd', 'commentAdd');
+            Route::post('commentUpdate', 'commentUpdate');
+            Route::post('commentDelete/{id}', 'commentDelete');
+            Route::post('report', 'report');
         });
     });
 });

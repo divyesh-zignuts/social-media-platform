@@ -9,6 +9,8 @@ use App\Models\PostAsset;
 use Illuminate\Http\Request;
 use App\Http\Traits\FileUpload;
 use App\Http\Controllers\Controller;
+use App\Models\PostComment;
+use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -19,7 +21,19 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $post = Post::select('id', 'user_id', 'bio')->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')->where('user_id', Auth::user()->id)->get();
+        $reportedPostIds = Report::where('reported_by', Auth::user()->id)
+            ->pluck('post_id');
+
+        $post = Post::select('id', 'user_id', 'bio')
+            ->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')
+            ->with(['comments' => function ($query) {
+                $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
+            }])
+            ->withCount('likes')
+            ->withCount('comments')
+            ->where('user_id', Auth::user()->id)
+            ->whereNotIn('id', $reportedPostIds)
+            ->get();
 
         return ok(__('strings.success', ['name' => 'Posts list get']), [
             'post'     =>  $post
@@ -173,5 +187,99 @@ class PostController extends Controller
         $post->delete();
 
         return ok(__('strings.success', ['name' => 'Post delete']));
+    }
+
+    /**
+     * Like and Unlike post
+     */
+    public function likeUnlike(string $id)
+    {
+        $post = Post::findOrFail($id);
+
+        if ($post->likes()->where('user_id', Auth::user()->id)->exists()) {
+            // Unlike the post
+            $post->likes()->detach(Auth::user()->id);
+            $likeCount = $post->likes()->count();
+            return ok(__('strings.success', ['name' => 'Post unlike']), ['post' => $post, 'likeCount' => $likeCount]);
+        } else {
+            // Like the post
+            $post->likes()->attach(Auth::user()->id);
+            $likeCount = $post->likes()->count();
+            return ok(__('strings.success', ['name' => 'Post like']), ['post' => $post, 'likeCount' => $likeCount]);
+        }
+    }
+
+    /**
+     * Add comment on post
+     */
+    public function commentAdd(Request $request)
+    {
+        $this->validate($request, [
+            'post_id'       => 'required|exists:posts,id',
+            'comment_id'    => 'nullable|exists:post_comments,id',
+            'comment'       => 'required|string',
+        ]);
+
+        $comment = PostComment::create([
+            'post_id'       => $request->post_id,
+            'user_id'       => Auth::user()->id,
+            'comment_id'    => $request->comment_id,
+            'comment'       => $request->comment,
+        ]);
+
+        return ok(__('strings.success', ['name' => 'Comment added']), [
+            'comment'     =>  $comment
+        ]);
+    }
+
+    public function commentUpdate(Request $request)
+    {
+        $this->validate($request, [
+            'id'        => 'required|exists:post_comments',
+            'comment'   => 'required|string',
+        ]);
+
+        $comment = PostComment::findOrFail($request->id);
+
+        $comment->update([
+            'comment'       => $request->comment,
+        ]);
+
+        return ok(__('strings.success', ['name' => 'Comment update']), [
+            'comment'     =>  $comment
+        ]);
+    }
+
+    public function commentDelete(string $id)
+    {
+        $comment = PostComment::findOrFail($id);
+        $comment->delete();
+        return ok(__('strings.success', ['name' => 'Comment delete']));
+    }
+
+    public function report(Request $request)
+    {
+        $this->validate($request, [
+            'post_id'       => 'required|exists:posts,id',
+            'reason'        => 'required|in:S,I,O,Oth',
+            'other_reason'  => 'nullable|required_if:reason,Oth|string',
+        ]);
+
+        $existingReport = Report::where('post_id', $request->post_id)
+            ->where('reported_by', Auth::user()->id)
+            ->first();
+
+        if ($existingReport) {
+            return ok(__('strings.already', ['name' => 'Post', 'status' => 'reported']), ['report' => $existingReport]);
+        }
+
+        $report = Report::create([
+            'post_id'       => $request->post_id,
+            'reported_by'   => Auth::user()->id,
+            'reason'        => $request->reason,
+            'other_reason'  => $request->other_reason,
+        ]);
+
+        return ok(__('strings.success', ['name' => 'Report']), ['report' => $report]);
     }
 }
