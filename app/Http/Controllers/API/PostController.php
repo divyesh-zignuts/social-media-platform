@@ -24,19 +24,26 @@ class PostController extends Controller
         $reportedPostIds = Report::where('reported_by', Auth::user()->id)
             ->pluck('post_id');
 
-        $post = Post::select('id', 'user_id', 'bio')
+        $posts = Post::select('id', 'user_id', 'bio')
             ->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')
-            ->with(['comments' => function ($query) {
-                $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
-            }])
             ->withCount('likes')
             ->withCount('comments')
             ->where('user_id', Auth::user()->id)
             ->whereNotIn('id', $reportedPostIds)
             ->get();
 
+        // Load the likes relationship for the posts
+        $posts->load(['likes' => function ($query) {
+            $query->where('user_id', Auth::user()->id);
+        }]);
+
+        // Iterate through the posts and add the 'liked_by_user' attribute
+        $posts->each(function ($post) {
+            $post->liked_by_user = $post->likes->isNotEmpty();
+        });
+
         return ok(__('strings.success', ['name' => 'Posts list get']), [
-            'post'     =>  $post
+            'posts'     =>  $posts
         ]);
     }
 
@@ -207,6 +214,21 @@ class PostController extends Controller
             $likeCount = $post->likes()->count();
             return ok(__('strings.success', ['name' => 'Post like']), ['post' => $post, 'likeCount' => $likeCount]);
         }
+    }
+
+    public function commentList(string $id)
+    {
+        $comments = Post::select('id', 'user_id', 'bio')
+            ->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')
+            ->with(['comments' => function ($query) {
+                $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
+            }])
+            ->where('user_id', Auth::user()->id)
+            ->get();
+
+        return ok(__('strings.success', ['name' => 'Comment list get']), [
+            'comments'     =>  $comments
+        ]);
     }
 
     /**
