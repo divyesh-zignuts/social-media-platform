@@ -21,7 +21,7 @@ class PostComment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'comment', 'created_by', 'updated_by', 'deleted_by',
+        'post_id', 'user_id', 'comment_id', 'comment', 'created_by', 'updated_by', 'deleted_by',
     ];
 
     public function post()
@@ -36,6 +36,6 @@ class PostComment extends Model
 
     public function replies()
     {
-        return $this->hasMany(PostComment::class, 'comment_id');
+        return $this->hasMany(PostComment::class, 'comment_id')->with('replies');
     }
 }

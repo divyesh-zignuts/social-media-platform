@@ -21,7 +21,7 @@ class Report extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'reason', 'other_reason', 'created_by', 'updated_by', 'deleted_by'
+        'post_id', 'reported_by', 'reason', 'other_reason', 'created_by', 'updated_by', 'deleted_by'
     ];
 
     public function post()

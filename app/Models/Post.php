@@ -31,7 +31,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(PostComment::class);
+        return $this->hasMany(PostComment::class)->whereNull('comment_id');
     }
 
     public function assets()
@@ -41,7 +41,7 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'post_likes', 'post_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'post_likes', 'post_id', 'user_id');
     }
 
     public function reports()
