@@ -17,6 +17,7 @@ const getUserLabel = computed(() => {
 </script>
 
 <template>
+  <div>
   <section>
     <VCard class="personal-details__card">
       <VCardTitle>
@@ -71,6 +72,7 @@ const getUserLabel = computed(() => {
       </VCardText>
     </VCard>
   </section>
+</div>
 </template>
 
 <style scoped lang="scss">

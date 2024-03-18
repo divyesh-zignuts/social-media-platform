@@ -215,10 +215,10 @@ onMounted(async () => {
         </VCard>
       </VCol>
     </VRow>
+    <DialogBox v-if="isDialogVisible" :isDialogVisible="isDialogVisible" :dialogTitle="dialogTitle"
+      :dialogDescription="dialogDescription" :dialogFirstButton="dialogFirstButton"
+      :dialogSecondButton="dialogSecondButton" @action="dialogAction" />
   </div>
-  <DialogBox v-if="isDialogVisible" :isDialogVisible="isDialogVisible" :dialogTitle="dialogTitle"
-    :dialogDescription="dialogDescription" :dialogFirstButton="dialogFirstButton"
-    :dialogSecondButton="dialogSecondButton" @action="dialogAction" />
 </template>
 
 <style lang="scss"></style>

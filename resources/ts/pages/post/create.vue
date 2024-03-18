@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import axios from '@axios';
 import { useHead } from '@unhead/vue';
-import vueDropzone from '../../../../node_modules/dropzone-vue3';
+import vueDropzone from 'dropzone-vue3';
 
 // change page title using this useHead
 useHead({
@@ -46,23 +46,16 @@ const handleSubmit = async () => {
     //   formData.append('post_file[]', file);
     // });
 
+    axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
     const payload = {
-      'post_type': inlineRadio.value,
-      'bio': editor.value,
-      'post_file': postFile.value
+      post_type: inlineRadio.value,
+      bio: editor.value,
+      post_file: postFile.value
     }
-
-    await axios.post('/post/create', payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-      .then(function (response) {
-        console.log(response.data.data)
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    const response = await axios.post('/post/create', payload)
+    if (response) {
+      console.log(response)
+    }
 
   } catch (error) {
     console.error(error);
