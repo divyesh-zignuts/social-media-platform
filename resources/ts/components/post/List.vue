@@ -2,12 +2,14 @@
 import { Ref } from 'vue'; // Import Ref from 'vue'
 import { post } from '../../composables/post';
 import CommentDialogBox from '../CommentDialogBox.vue';
+import ReportDialog from '../ReportDialog.vue';
 
-const { getPostList, test, like, postList: Post, comment } = post
+const { getPostList, test, like, postList: Post, getComments } = post
 
 const postList: Ref<Post[]> = post.postList;
 const comments: Ref<Comment[]> = post.comments;
 const isDialogVisible = ref<boolean>(false)
+const isReportDialogVisible = ref<boolean>(false)
 
 interface Asset {
   id: string;
@@ -69,33 +71,27 @@ interface Post {
   likes: Like[];
 }
 
-const actionsItems = [
-  {
-    title: 'Edit',
-    value: 'edit',
-    id: 1,
-    action: 'edit',
-  },
-  {
-    title: 'Delete',
-    value: 'delete',
-    id: 2,
-    action: 'delete',
-  }
+const moreList = [
+  { title: 'Edit', id: 1, value: 'edit', action: 'edit' },
+  { title: 'Delete', id: 2, value: 'delete', action: 'delete' },
+  { title: 'Report', id: 3, value: 'report', action: 'report' },
 ]
 
 const dialogAction = (item: string) => {
   if (item === 'close') {
     console.log('item: ', item);
-
     isDialogVisible.value = false
+    getPostList()
   }
 }
 
 const commentBtnClick = (id: string) => {
-  post.comment(id)
-
+  post.getComments(id)
   isDialogVisible.value = true
+}
+
+const handleMoreAction = (i: any) => {
+  console.log('i: ', i);
 }
 
 onMounted(async () => {
@@ -105,7 +101,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <VRow>
+    <VRow class="d-flex align-content-center flex-column">
       <VCol cols="12" sm="4" md="3" v-for="(post, index) in postList" :key="index">
         <VCard height="470">
           <div class="vCardHeader">
@@ -118,23 +114,20 @@ onMounted(async () => {
               </div>
 
               <div class="postAction">
-                <VMenu>
-                  <template #activator="{ props }">
-                    <VBtn color="secondary" variant="plain" rounded="pill" v-bind="props">
-                      <VIcon icon="tabler-dots-vertical" size="22" />
-                    </VBtn>
-                  </template>
-
-                  <VCard>
-                    <VList v-for="i in actionsItems" :key="i?.id">
-                      <VListItem @click="test()">
-                        <template #title>
-                          {{ i?.title }}
-                        </template>
-                      </VListItem>
-                    </VList>
-                  </VCard>
-                </VMenu>
+                <IconBtn>
+                  <VIcon icon="mdi-dots-vertical" />
+                  <VMenu activator="parent" open-on-click>
+                    <VCard>
+                      <VList v-for="i in moreList" :key="i?.id" class="pa-1">
+                        <VListItem @click="handleMoreAction(i)">
+                          <template #title>
+                            {{ i?.title }}
+                          </template>
+                        </VListItem>
+                      </VList>
+                    </VCard>
+                  </VMenu>
+                </IconBtn>
               </div>
             </div>
           </div>
@@ -154,7 +147,7 @@ onMounted(async () => {
               <span class="text-subtitle-2 mt-1">{{ post?.comments_count }}</span>
             </div>
             <div>
-              <IconBtn icon="tabler-octagon-off" class="me-1" />
+              <IconBtn icon="tabler-share" class="me-1" />
             </div>
           </div>
         </VCard>
@@ -162,6 +155,7 @@ onMounted(async () => {
     </VRow>
     <CommentDialogBox v-if="isDialogVisible" :isDialogVisible="isDialogVisible" :comments="comments"
       @action="dialogAction" />
+    <ReportDialog v-if="isReportDialogVisible" :isReportDialogVisible="isReportDialogVisible" @action="dialogAction" />
   </div>
 </template>
 

@@ -1,9 +1,14 @@
 <script lang="ts" setup>
+import axios from '@axios';
 import { defineEmits } from 'vue';
+import { post } from '../composables/post.ts';
+
+const { getComments } = post
 
 // Props
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
+
 
 interface Emit {
   (e: 'action', value: string): void
@@ -14,110 +19,122 @@ interface Props {
   comments: object
 }
 
-const countryList = [
-  {
-    label: 'Bahamas, The',
-    value: 'bahamas',
-  },
-  {
-    label: 'Bahrain',
-    value: 'bahrain',
-  },
-  {
-    label: 'Bangladesh',
-    value: 'bangladesh',
-  },
-  {
-    label: 'Barbados',
-    value: 'barbados',
-  },
-  {
-    label: 'Belarus',
-    value: 'belarus',
-  },
-  {
-    label: 'Belgium',
-    value: 'belgium',
-  },
-  {
-    label: 'Belize',
-    value: 'belize',
-  },
-  {
-    label: 'Benin',
-    value: 'benin',
-  },
-  {
-    label: 'Bhutan',
-    value: 'bhutan',
-  },
-  {
-    label: 'Bolivia',
-    value: 'bolivia',
-  },
-  {
-    label: 'Bosnia and Herzegovina',
-    value: 'bosnia',
-  },
-  {
-    label: 'Botswana',
-    value: 'botswana',
-  },
-  {
-    label: 'Brazil',
-    value: 'brazil',
-  },
-  {
-    label: 'Brunei',
-    value: 'brunei',
-  },
-  {
-    label: 'Bulgaria',
-    value: 'bulgaria',
-  },
-  {
-    label: 'Burkina Faso',
-    value: 'burkina',
-  },
-]
+const commentMsg = ref('')
 
-const selectedCountry = ref('')
-const isDialogVisible = ref(false)
+const comment = async (id: string) => {
+  try {
+    const response = await axios.post('/post/commentAdd', {
+      post_id: id,
+      comment_id: null,
+      comment: commentMsg.value,
+    })
+      .then(function (response) {
+        if (response.data.data.comment) {
+          props.comments = getComments(id);
+          commentMsg.value = ''
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
   <div>
-    <VDialog :model-value="props.isDialogVisible" persistent scrollable max-width="600">
-
+    <VDialog :model-value="props.isDialogVisible" persistent max-width="600">
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="emit('action', 'close')" />
 
       <!-- Dialog Content -->
       <VCard>
-        <VCardItem class="pb-5">
-          <VCardTitle>Select Country</VCardTitle>
+        <VCardItem class="pb-3">
+          <VCardTitle>Comments</VCardTitle>
         </VCardItem>
-
         <VDivider />
-        <VCardText style="block-size: 300px;">
-          {{ props.comments }}
-          <VRadioGroup v-model="selectedCountry" :inline="false">
-            <VRadio v-for="country in countryList" :key="country.label" :label="country.label" :value="country.value"
-              color="primary" />
-          </VRadioGroup>
-        </VCardText>
+        <VCardText>
+          <div v-for="(post, postIndex) in props.comments" :key="postIndex">
+            <div v-for="(asset, assIndex) in post?.assets" :key="assIndex">
+              <VImg :src="asset?.asset_url" height="300" />
+            </div>
+            <div class="pt-4" v-html="post?.bio">
+            </div>
+            <VDivider />
+            <VMain class="chat-content-container">
+              <div class="chat-log py-5">
+                <div class="comment-container">
+                  <div class="chat-group d-flex align-start" v-for="(comments, commIndex) in post?.comments"
+                    :key="commIndex">
+                    <div class="chat-avatar me-4">
+                      <VTooltip activator="parent" location="top">
+                        {{ post?.user?.first_name }} {{ post?.user?.last_name }}
+                      </VTooltip>
+                      <VAvatar size="32" color="primary">
+                        {{ post?.user?.first_name.charAt(0) }}{{ post?.user?.last_name.charAt(0) }}
+                      </VAvatar>
+                    </div>
+                    <div class="chat-body d-inline-flex flex-column align-start">
+                      <p class="chat-content py-2 px-4 elevation-1 chat-left">
+                        {{ comments.comment }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <VDivider />
-
-        <VCardText class="d-flex justify-end flex-wrap gap-3 pt-5">
-          <VBtn color="secondary" variant="tonal" @click="emit('action', 'close')">
-            Close
-          </VBtn>
-          <VBtn @click="emit('action', 'close')">
-            Save
-          </VBtn>
+              <VForm class="chat-log-message-form">
+                <VTextField v-model="commentMsg" variant="solo" class="chat-message-input"
+                  placeholder="Type your message..." density="default" autofocus>
+                  <template #append-inner>
+                    <VBtn @click.prevent="comment(post.id)">
+                      Send
+                    </VBtn>
+                  </template>
+                </VTextField>
+              </VForm>
+            </VMain>
+          </div>
         </VCardText>
       </VCard>
     </VDialog>
   </div>
 </template>
+
+<style lang="scss">
+.chat-content-container {
+  .chat-message-input {
+    .v-field__append-inner {
+      align-items: center;
+      padding-block-start: 0;
+    }
+
+    .v-field--appended {
+      padding-inline-end: 9px;
+    }
+  }
+}
+
+.chat-log {
+  .chat-content {
+    border-end-end-radius: 6px;
+    border-end-start-radius: 6px;
+
+    &.chat-left {
+      border-start-end-radius: 6px;
+    }
+
+    &.chat-right {
+      border-start-start-radius: 6px;
+    }
+  }
+}
+
+.comment-container {
+  max-block-size: 200px;
+  overflow-y: auto;
+}
+</style>

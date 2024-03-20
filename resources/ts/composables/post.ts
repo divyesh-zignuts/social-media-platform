@@ -37,7 +37,7 @@ export const post = {
         console.log(error);
       }
   },
-  comment: async (id:string) => {
+  getComments: async (id:string) => {
     try {
       await axios.get(`/post/commentList/${id}`)
         .then(function (response) {

@@ -8,7 +8,6 @@ useHead({
   title: 'SMP | Post Create',
 })
 
-
 const inlineRadio = ref('I')
 const editor = ref()
 const myVueDropzone = ref()
@@ -39,20 +38,22 @@ const removeFile = (file: any) => {
 const handleSubmit = async () => {
   try {
 
-    // let formData = new FormData();
-    // formData.append('post_type', inlineRadio.value);
-    // formData.append('bio', editor.value);
-    // postFile.value.forEach((file) => {
-    //   formData.append('post_file[]', file);
-    // });
+    // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+    // const payload = {
+    //   post_type: inlineRadio.value,
+    //   bio: editor.value,
+    //   post_file: postFile.value
+    // }
+    // const response = await axios.post('/post/create', payload)
 
-    axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
-    const payload = {
-      post_type: inlineRadio.value,
-      bio: editor.value,
-      post_file: postFile.value
-    }
-    const response = await axios.post('/post/create', payload)
+    let formData = new FormData();
+    formData.append('post_type', inlineRadio.value);
+    formData.append('bio', editor.value);
+    postFile.value.forEach((file) => {
+      formData.append('post_files[]', file);
+    });
+
+    const response = await axios.post('/post/create', formData)
     if (response) {
       console.log(response)
     }
@@ -60,7 +61,7 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 </script>
 
@@ -68,14 +69,13 @@ const handleSubmit = async () => {
   <div>
     <VCard title="Post Create">
       <VCardText>
-
         <VRow>
           <VCol cols="12">
             <VRow no-gutters>
               <VCol cols="12" class="">
                 <label class="v-label text-body-2 text-high-emphasis">Upload file</label>
                 <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
-                  @vdropzone-success="handleFileAdding" @vdropzone-removed-file="removeFile" />
+                  @vdropzone-success="handleFileAdding" @duplicateCheck="true" @vdropzone-removed-file="removeFile" />
               </VCol>
             </VRow>
           </VCol>
