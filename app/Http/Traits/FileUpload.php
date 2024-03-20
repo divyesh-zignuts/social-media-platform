@@ -28,11 +28,14 @@ trait FileUpload
     public function storeFile($file, $filename, $id, $type)
     {
         // Move the original file to the post's directory
-        // $filename = $file->move('users/' . $id . '/post/' . $type . '/', $filename);
-        // return $filename;
+        // $path = '/storage/users/' . $id . '/post/' . $type;
+        // $file->move(public_path($path), $filename);
+        // return $path . '/' . $filename;
 
         $path = '/users/' . $id . '/post/' . $type . '/' . $filename;
+        // Storage::putFileAs('/users/' . $id . '/post/' . $type . '/', $file, $filename);
         Storage::disk('public')->put($path, fopen($file, 'r+'));
+        // Storage::disk('public')->put($path, $file, 'public');
         return '/storage' . $path;
     }
 

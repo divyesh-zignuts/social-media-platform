@@ -54,7 +54,7 @@ class PostController extends Controller
     {
         $request->validate([
             'post_type' => 'required|in:I,V,G',
-            'post_file' => [
+            'post_files' => [
                 'required',
                 'array',
                 function ($attribute, $value, $fail) use ($request) {
@@ -75,13 +75,13 @@ class PostController extends Controller
 
         $post_type = $request->post_type === 'I' ? 'images' : ($request->post_type === 'V' ? 'videos' : (($request->post_type === 'G') ? 'gif' : null));
 
-        $post = Post::create([
-            'user_id'   => Auth::user()->id,
-            'bio'       => $request->bio,
-        ]);
+        if ($request->hasfile('post_files')) {
+            $post = Post::create([
+                'user_id'   => Auth::user()->id,
+                'bio'       => $request->bio,
+            ]);
 
-        if ($request->hasfile('post_file')) {
-            $files = $request->file('post_file');
+            $files = $request->file('post_files');
             foreach ($files as $file) {
 
                 $filename = $this->createFilename($file);
@@ -120,7 +120,7 @@ class PostController extends Controller
         $request->validate([
             'post_type'         => 'required|in:I,V,G',
             'hidden_post_file'  => 'nullable|string',
-            'post_file'         => [
+            'post_files'         => [
                 'nullable',
                 'array',
                 function ($attribute, $value, $fail) use ($request) {
@@ -149,14 +149,14 @@ class PostController extends Controller
             'G' => 'gif'
         ];
 
-        if ($request->hasfile('post_file')) {
+        if ($request->hasfile('post_files')) {
             $assetType = $postTypeMap[$postType] ?? null;
             if ($assetType) {
                 // Remove Old File
                 foreach ($post->assets as $asset) {
                     $this->unlink($asset->asset_url);
                 }
-                $files = $request->file('post_file');
+                $files = $request->file('post_files');
 
                 foreach ($files as $file) {
                     $filename = $this->createFilename($file);
@@ -221,7 +221,7 @@ class PostController extends Controller
         $postComments = Post::select('id', 'user_id', 'bio')
             ->with('assets:id,post_id,type,asset_url', 'user:id,first_name,last_name,profile_image_url')
             ->with(['comments' => function ($query) {
-                $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
+                $query->select('id', 'post_id', 'user_id', 'comment_id', 'comment')->orderBy('created_at', 'ASC')->with('user:id,first_name,last_name,profile_image_url', 'replies:id,post_id,user_id,comment_id,comment');
             }])
             ->where('id', $id)
             ->get();
