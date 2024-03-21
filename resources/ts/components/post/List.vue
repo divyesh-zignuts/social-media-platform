@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import DialogBox from "@/components/DialogBox.vue";
+import axios from '@axios';
 import { Ref } from 'vue'; // Import Ref from 'vue'
 import { post } from '../../composables/post';
 import CommentDialogBox from '../CommentDialogBox.vue';
@@ -8,8 +10,24 @@ const { getPostList, test, like, postList: Post, getComments } = post
 
 const postList: Ref<Post[]> = post.postList;
 const comments: Ref<Comment[]> = post.comments;
+const reportPostId = ref<string>()
+const deletePostId = ref<string>()
 const isDialogVisible = ref<boolean>(false)
+const isCommentDialogVisible = ref<boolean>(false)
 const isReportDialogVisible = ref<boolean>(false)
+
+const dialogTitle = ref<string>()
+const dialogDescription = ref<string>()
+const dialogFirstButton = ref({
+  firstButtonTitle: '',
+  firstButtonColor: '',
+  firstButtonAction: '',
+})
+const dialogSecondButton = ref({
+  secondButtonTitle: '',
+  secondButtonColor: '',
+  secondButtonAction: '',
+})
 
 interface Asset {
   id: string;
@@ -78,20 +96,55 @@ const moreList = [
 ]
 
 const dialogAction = (item: string) => {
-  if (item === 'close') {
-    console.log('item: ', item);
-    isDialogVisible.value = false
+  if (item === 'commentDialogClose') {
+    isCommentDialogVisible.value = false
     getPostList()
+  } else if (item === 'reportDialogClose') {
+    isReportDialogVisible.value = false
+  } else if (item === 'reportSuccessful') {
+    isReportDialogVisible.value = false
+    getPostList()
+  } else if (item === 'dialogClose') {
+    isDialogVisible.value = false
+  } else if (item === 'deletePost') {
+    try {
+      axios.post(`/post/destroy/${deletePostId.value}`)
+        .then(function (response) {
+          if (response) {
+            isDialogVisible.value = false
+            getPostList()
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
 const commentBtnClick = (id: string) => {
   post.getComments(id)
-  isDialogVisible.value = true
+  isCommentDialogVisible.value = true
 }
 
-const handleMoreAction = (i: any) => {
-  console.log('i: ', i);
+const handleMoreAction = (value: string, id: string) => {
+  if (value === 'report') {
+    reportPostId.value = id
+    isReportDialogVisible.value = true
+  } else if (value === 'delete') {
+    deletePostId.value = id
+    dialogTitle.value = 'Post Delete'
+    dialogDescription.value = 'Are you sure!! You want to delete this ??'
+    dialogFirstButton.value.firstButtonTitle = 'Yes'
+    dialogFirstButton.value.firstButtonColor = 'success'
+    dialogFirstButton.value.firstButtonAction = 'deletePost'
+    dialogSecondButton.value.secondButtonTitle = 'No'
+    dialogSecondButton.value.secondButtonColor = 'error'
+    dialogSecondButton.value.secondButtonAction = 'dialogClose'
+    isDialogVisible.value = true
+  }
 }
 
 onMounted(async () => {
@@ -103,12 +156,12 @@ onMounted(async () => {
   <div>
     <VRow class="d-flex align-content-center flex-column">
       <VCol cols="12" sm="4" md="3" v-for="(post, index) in postList" :key="index">
-        <VCard height="470">
+        <VCard>
           <div class="vCardHeader">
             <div class="postInfo">
               <div class="userInfo">
                 <VAvatar color="primary">
-                  A
+                  {{ post?.user?.first_name.charAt(0) }}{{ post?.user?.last_name.charAt(0) }}
                 </VAvatar>
                 <span class="ms-2"> {{ post?.user?.first_name }}</span>
               </div>
@@ -119,7 +172,7 @@ onMounted(async () => {
                   <VMenu activator="parent" open-on-click>
                     <VCard>
                       <VList v-for="i in moreList" :key="i?.id" class="pa-1">
-                        <VListItem @click="handleMoreAction(i)">
+                        <VListItem @click="handleMoreAction(i.value, post.id)">
                           <template #title>
                             {{ i?.title }}
                           </template>
@@ -153,9 +206,13 @@ onMounted(async () => {
         </VCard>
       </VCol>
     </VRow>
-    <CommentDialogBox v-if="isDialogVisible" :isDialogVisible="isDialogVisible" :comments="comments"
-      @action="dialogAction" />
-    <ReportDialog v-if="isReportDialogVisible" :isReportDialogVisible="isReportDialogVisible" @action="dialogAction" />
+    <CommentDialogBox v-if="isCommentDialogVisible" :isCommentDialogVisible="isCommentDialogVisible"
+      :comments="comments" @action="dialogAction" />
+    <ReportDialog v-if="isReportDialogVisible" :isReportDialogVisible="isReportDialogVisible"
+      :reportPostId="reportPostId" @action="dialogAction" />
+    <DialogBox v-if="isDialogVisible" :isDialogVisible="isDialogVisible" :dialogTitle="dialogTitle"
+      :dialogDescription="dialogDescription" :dialogFirstButton="dialogFirstButton"
+      :dialogSecondButton="dialogSecondButton" @action="dialogAction" />
   </div>
 </template>
 
