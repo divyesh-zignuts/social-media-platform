@@ -15,7 +15,7 @@ interface Emit {
 }
 
 interface Props {
-  isDialogVisible: boolean
+  isCommentDialogVisible: boolean
   comments: object
 }
 
@@ -46,9 +46,9 @@ const comment = async (id: string) => {
 
 <template>
   <div>
-    <VDialog :model-value="props.isDialogVisible" persistent max-width="600">
+    <VDialog :model-value="props.isCommentDialogVisible" persistent max-width="600">
       <!-- Dialog close btn -->
-      <DialogCloseBtn @click="emit('action', 'close')" />
+      <DialogCloseBtn @click="emit('action', 'commentDialogClose')" />
 
       <!-- Dialog Content -->
       <VCard>

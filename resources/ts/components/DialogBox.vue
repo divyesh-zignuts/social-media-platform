@@ -23,7 +23,7 @@ interface Props {
   <VDialog persistent max-width="500" :model-value="props.isDialogVisible">
 
     <!-- Dialog close btn -->
-    <DialogCloseBtn @click="emit('action', 'close')" />
+    <DialogCloseBtn @click="emit('action', 'dialogClose')" />
 
     <!-- Dialog Content -->
     <VCard :title="props.dialogTitle">

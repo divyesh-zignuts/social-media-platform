@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import axios from '@/plugins/axios';
-import avatar1 from '@images/avatars/avatar-1.png';
 import CryptoJs from 'crypto-js';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
 const first_name = ref('')
+const last_name = ref('')
 const role = ref('')
 const ProfileImage = ref('')
 const id = ref('')
@@ -36,6 +36,7 @@ onMounted(() => {
 
   if (userData) {
     first_name.value = userData.first_name
+    last_name.value = userData.last_name
     role.value = userData.role === 'A' ? 'Admin' : 'User'
     ProfileImage.value = userData.profile_image_url
     id.value = userData.id
@@ -46,7 +47,7 @@ onMounted(() => {
 <template>
   <VBadge dot location="bottom right" offset-x="3" offset-y="3" bordered color="success">
     <VAvatar class="cursor-pointer" color="primary" variant="tonal">
-      <VImg :src="avatar1" />
+      {{ first_name.charAt(0) }}{{ last_name.charAt(0) }}
 
       <!-- SECTION Menu -->
       <VMenu activator="parent" width="230" location="bottom end" offset="14px">
@@ -57,7 +58,7 @@ onMounted(() => {
               <VListItemAction start>
                 <VBadge dot location="bottom right" offset-x="3" offset-y="3" color="success">
                   <VAvatar color="primary" variant="tonal">
-                    <VImg :src="avatar1" />
+                    {{ first_name.charAt(0) }}{{ last_name.charAt(0) }}
                   </VAvatar>
                 </VBadge>
               </VListItemAction>

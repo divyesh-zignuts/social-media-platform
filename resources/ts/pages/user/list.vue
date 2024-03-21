@@ -112,7 +112,7 @@ const handleAction = (val: object, id: string) => {
 }
 
 const dialogAction = (item: string) => {
-  if (item === 'close') {
+  if (item === 'dialogClose') {
     isDialogVisible.value = false
   }
   else if (item === 'delete') {
