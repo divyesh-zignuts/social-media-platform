@@ -62,12 +62,6 @@ const otherReasonRules = computed(() => {
 <template>
   <div>
     <VDialog :model-value="props.isReportDialogVisible" max-width="600">
-      <!-- Dialog Activator -->
-      <template #activator="{ props }">
-        <VBtn v-bind="props">
-          Open Dialog
-        </VBtn>
-      </template>
 
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="emit('action', 'reportDialogClose')" />

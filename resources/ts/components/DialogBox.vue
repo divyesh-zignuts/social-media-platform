@@ -40,7 +40,7 @@ interface Props {
           </VBtn>
 
           <VBtn v-if="props.dialogSecondButton" @click="emit('action', props.dialogSecondButton.secondButtonAction)"
-            :color="props.dialogFirstButton.secondButtonColor">
+            :color="props.dialogSecondButton.secondButtonColor">
             {{ props.dialogSecondButton.secondButtonTitle }}
           </VBtn>
         </VCardText>
