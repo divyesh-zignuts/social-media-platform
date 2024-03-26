@@ -19,6 +19,20 @@ export const post = {
       console.log(error);
     }
   },
+  getTrendingPostList: async () => {
+    try {
+    await axios.get('/post/trending')
+      .then(function (response) {
+        post.postList.value = response.data.data.posts
+        return post.postList.value;
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  },
   test: () => {
     console.log('fsf');
   },
@@ -27,7 +41,7 @@ export const post = {
       await axios.get(`/post/likeUnlike/${id}`)
         .then(function (response) {
           if(response.data.data.post){
-            post.getPostList()
+            return true
           }
         })
         .catch(function (error) {

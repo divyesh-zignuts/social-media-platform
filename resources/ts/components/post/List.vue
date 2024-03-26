@@ -129,6 +129,16 @@ const commentBtnClick = (id: string) => {
   isCommentDialogVisible.value = true
 }
 
+const likeBtnClick = (id: string) => {
+  post.like(id)
+    .then(function (response: any) {
+      getPostList()
+    })
+    .catch(function (error: any) {
+      console.error('Error while liking:', error);
+    });
+}
+
 const handleMoreAction = (value: string, id: string) => {
   if (value === 'report') {
     reportPostId.value = id
@@ -190,7 +200,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="d-flex justify-lg-space-evenly">
-            <div @click="like(post.id)">
+            <div @click="likeBtnClick(post.id)">
               <IconBtn :icon="post?.liked_by_user ? 'tabler-heart-filled' : 'tabler-heart'"
                 :color="post?.liked_by_user ? 'error' : ''" class="me-1" />
               <span class="text-subtitle-2 me-4">{{ post?.likes_count }}</span>
