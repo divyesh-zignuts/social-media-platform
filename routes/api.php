@@ -12,6 +12,10 @@ Route::namespace('API')->group(function () {
         Route::post('register', 'register');
     });
 
+    Route::controller('PostController')->prefix('post')->group(function () {
+        Route::get('trending', 'trending');
+    });
+
     Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::controller('AuthController')->group(function () {
@@ -37,7 +41,6 @@ Route::namespace('API')->group(function () {
             Route::post('commentUpdate', 'commentUpdate');
             Route::post('commentDelete/{id}', 'commentDelete');
             Route::post('report', 'report');
-            Route::get('trending', 'trending');
         });
     });
 });

@@ -308,30 +308,44 @@ class PostController extends Controller
 
     public function trending(Request $request)
     {
-        $userId = Auth::user()->id;
+        $posts = NULL;
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
 
-        $posts = Post::select('id', 'user_id', 'bio')
-            ->with([
-                'assets:id,post_id,type,asset_url',
-                'user:id,first_name,last_name,profile_image_url',
-                'likes' => function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                }
-            ])
-            ->withCount('likes')
-            ->withCount('comments')
-            ->whereNotIn('id', function ($query) use ($userId) {
-                $query->select('post_id')
-                    ->from('reports')
-                    ->where('reported_by', $userId);
-            })
-            ->orderByRaw('likes_count + comments_count DESC')
-            ->get();
+            $posts = Post::select('id', 'user_id', 'bio')
+                ->with([
+                    'assets:id,post_id,type,asset_url',
+                    'user:id,first_name,last_name,profile_image_url',
+                    'likes' => function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    }
+                ])
+                ->withCount('likes')
+                ->withCount('comments')
+                ->whereNotIn('id', function ($query) use ($userId) {
+                    $query->select('post_id')
+                        ->from('reports')
+                        ->where('reported_by', $userId);
+                })
+                ->orderByRaw('likes_count + comments_count DESC')
+                ->get();
 
-        // Add the 'liked_by_user' attribute to each post
-        $posts->each(function ($post) {
-            $post->liked_by_user = $post->likes->isNotEmpty();
-        });
+            // Add the 'liked_by_user' attribute to each post
+            $posts->each(function ($post) {
+                $post->liked_by_user = $post->likes->isNotEmpty();
+            });
+        } else {
+            $posts = Post::select('id', 'user_id', 'bio')
+                ->with([
+                    'assets:id,post_id,type,asset_url',
+                    'user:id,first_name,last_name,profile_image_url',
+                ])
+                ->withCount('likes')
+                ->withCount('comments')
+                ->orderByRaw('likes_count + comments_count DESC')
+                ->get();
+        }
+
 
         return ok(__('strings.success', ['name' => 'Posts list get']), [
             'posts'     =>  $posts
