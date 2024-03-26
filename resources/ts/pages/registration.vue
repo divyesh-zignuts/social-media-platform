@@ -88,11 +88,8 @@ const registration = async () => {
         <VCardText>
           <VNodeRenderer :nodes="themeConfig.app.logo" class="mb-6" />
           <h5 class="text-h5 mb-1">
-            Adventure starts here 🚀
+            Register yourself here 🚀
           </h5>
-          <p class="mb-0">
-            Make your app management easy and fun!
-          </p>
         </VCardText>
 
         <VCardText>
@@ -138,7 +135,7 @@ const registration = async () => {
               <VCol cols="12" class="text-center text-base">
                 <span>Already have an account?</span>
                 <RouterLink class="text-primary ms-2" :to="{ name: 'login' }">
-                  Sign in instead
+                  Login in
                 </RouterLink>
               </VCol>
 

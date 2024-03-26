@@ -64,5 +64,8 @@ export const post = {
       } catch (error) {
         console.log(error);
       }
+  },
+  checkLogin: () => {
+    return !!localStorage.getItem('accessToken')
   }
 };

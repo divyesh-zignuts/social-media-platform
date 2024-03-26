@@ -15,8 +15,9 @@ const checkToken = () => {
 }
 
 router.beforeEach((to, from, next) => {
-  if (!checkToken() && (to.name !== 'login' && to.name !== 'registration'))
-    next({ name: 'login' })
+  if (!checkToken() && (to.name !== 'login' && to.name !== 'registration' && to.name !== 'trending')) {
+    next({ name: 'trending' })
+  }
   else if(checkToken()){
     if (to.name === 'login' || to.name === 'registration') {
       next({ name: 'index' })

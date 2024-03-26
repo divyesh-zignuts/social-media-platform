@@ -360,6 +360,7 @@ declare module '@vue/runtime-core' {
     TimelineBasic: typeof import('./resources/ts/views/demos/components/timeline/TimelineBasic.vue')['default']
     TimelineCard: typeof import('./resources/ts/views/demos/components/timeline/TimelineCard.vue')['default']
     TimelineWithIcons: typeof import('./resources/ts/views/demos/components/timeline/TimelineWithIcons.vue')['default']
+    Trending: typeof import('./resources/ts/components/post/Trending.vue')['default']
     TwoFactorAuthDialog: typeof import('./resources/ts/components/dialogs/TwoFactorAuthDialog.vue')['default']
     UserInfoEditDialog: typeof import('./resources/ts/components/dialogs/UserInfoEditDialog.vue')['default']
     UserUpgradePlanDialog: typeof import('./resources/ts/components/dialogs/UserUpgradePlanDialog.vue')['default']
