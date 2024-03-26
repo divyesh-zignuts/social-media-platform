@@ -99,7 +99,7 @@ const handleSubmit = async () => {
             <VBtn type="button" @click.prevent="handleSubmit()">
               Submit
             </VBtn>
-            <VBtn color="secondary" variant="tonal">
+            <VBtn color="secondary" variant="tonal" :to="{ path: '/post/list' }">
               Cancel
             </VBtn>
           </VCol>

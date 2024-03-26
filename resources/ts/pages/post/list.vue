@@ -11,6 +11,12 @@ useHead({
 
 <template>
   <div>
+    <div class="d-flex justify-end">
+      <VBtn color="primary" :to="{ path: '/post/create' }">
+        <VIcon start icon="tabler-plus" />
+        Create Post
+      </VBtn>
+    </div>
     <List />
   </div>
 </template>
