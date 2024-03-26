@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import DialogBox from "@/components/DialogBox.vue";
 import axios from '@axios';
-import { Ref } from 'vue'; // Import Ref from 'vue'
+import { Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { post } from '../../composables/post';
 import CommentDialogBox from '../CommentDialogBox.vue';
 import ReportDialog from '../ReportDialog.vue';
@@ -15,6 +16,7 @@ const deletePostId = ref<string>()
 const isDialogVisible = ref<boolean>(false)
 const isCommentDialogVisible = ref<boolean>(false)
 const isReportDialogVisible = ref<boolean>(false)
+const router = useRouter()
 
 const dialogTitle = ref<string>()
 const dialogDescription = ref<string>()
@@ -139,6 +141,12 @@ const likeBtnClick = (id: string) => {
     });
 }
 
+const userInfo = (id: string) => {
+  router.push({
+    path: `/user/profile/${id}`,
+  })
+}
+
 const handleMoreAction = (value: string, id: string) => {
   if (value === 'report') {
     reportPostId.value = id
@@ -169,7 +177,7 @@ onMounted(async () => {
         <VCard>
           <div class="vCardHeader">
             <div class="postInfo">
-              <div class="userInfo">
+              <div class="userInfo" @click="userInfo(post?.user?.id)">
                 <VAvatar color="primary">
                   {{ post?.user?.first_name.charAt(0) }}{{ post?.user?.last_name.charAt(0) }}
                 </VAvatar>
@@ -242,5 +250,9 @@ onMounted(async () => {
   font-weight: 400;
   letter-spacing: normal;
   text-transform: none;
+}
+
+.postInfo .userInfo {
+  cursor: pointer;
 }
 </style>

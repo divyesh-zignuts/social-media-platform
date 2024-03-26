@@ -1,32 +1,14 @@
 <script lang="ts" setup>
 import CommentDialogBox from '@/components/CommentDialogBox.vue';
-import DialogBox from "@/components/DialogBox.vue";
 import ReportDialog from '@/components/ReportDialog.vue';
 import axios from '@axios';
-import { Ref } from 'vue'; // Import Ref from 'vue'
+import { useHead } from '@unhead/vue';
+import { useRouter } from 'vue-router';
 import { post } from '../composables/post.ts';
 
-const { getTrendingPostList, test, like, postList: Post, getComments } = post
-
-const postList: Ref<Post[]> = post.postList;
-const comments: Ref<Comment[]> = post.comments;
-const reportPostId = ref<string>()
-const deletePostId = ref<string>()
-const isDialogVisible = ref<boolean>(false)
-const isCommentDialogVisible = ref<boolean>(false)
-const isReportDialogVisible = ref<boolean>(false)
-
-const dialogTitle = ref<string>()
-const dialogDescription = ref<string>()
-const dialogFirstButton = ref({
-  firstButtonTitle: '',
-  firstButtonColor: '',
-  firstButtonAction: '',
-})
-const dialogSecondButton = ref({
-  secondButtonTitle: '',
-  secondButtonColor: '',
-  secondButtonAction: '',
+// change page title using this useHead
+useHead({
+  title: 'SMP | Trending Post',
 })
 
 interface Asset {
@@ -89,9 +71,18 @@ interface Post {
   likes: Like[];
 }
 
+const { getTrendingPostList, postList: Post, getComments: Comment } = post
+
+const postList = post.postList;
+const comments = post.comments;
+const reportPostId = ref<string>()
+const deletePostId = ref<string>()
+const isDialogVisible = ref<boolean>(false)
+const isCommentDialogVisible = ref<boolean>(false)
+const isReportDialogVisible = ref<boolean>(false)
+const router = useRouter()
+
 const moreList = [
-  { title: 'Edit', id: 1, value: 'edit', action: 'edit' },
-  { title: 'Delete', id: 2, value: 'delete', action: 'delete' },
   { title: 'Report', id: 3, value: 'report', action: 'report' },
 ]
 
@@ -128,6 +119,7 @@ const commentBtnClick = (id: string) => {
   post.getComments(id)
   isCommentDialogVisible.value = true
 }
+
 const likeBtnClick = (id: string) => {
   post.like(id)
     .then(function (response: any) {
@@ -142,18 +134,13 @@ const handleMoreAction = (value: string, id: string) => {
   if (value === 'report') {
     reportPostId.value = id
     isReportDialogVisible.value = true
-  } else if (value === 'delete') {
-    deletePostId.value = id
-    dialogTitle.value = 'Post Delete'
-    dialogDescription.value = 'Are you sure!! You want to delete this ??'
-    dialogFirstButton.value.firstButtonTitle = 'Yes'
-    dialogFirstButton.value.firstButtonColor = 'success'
-    dialogFirstButton.value.firstButtonAction = 'deletePost'
-    dialogSecondButton.value.secondButtonTitle = 'No'
-    dialogSecondButton.value.secondButtonColor = 'error'
-    dialogSecondButton.value.secondButtonAction = 'dialogClose'
-    isDialogVisible.value = true
   }
+}
+
+const userInfo = (id: string) => {
+  router.push({
+    path: `/user/profile/${id}`,
+  })
 }
 
 onMounted(async () => {
@@ -168,7 +155,7 @@ onMounted(async () => {
         <VCard>
           <div class="vCardHeader">
             <div class="postInfo">
-              <div class="userInfo">
+              <div class="userInfo" @click="userInfo(post?.user?.id)">
                 <VAvatar color="primary">
                   {{ post?.user?.first_name.charAt(0) }}{{ post?.user?.last_name.charAt(0) }}
                 </VAvatar>
@@ -241,5 +228,9 @@ onMounted(async () => {
   font-weight: 400;
   letter-spacing: normal;
   text-transform: none;
+}
+
+.postInfo .userInfo {
+  cursor: pointer;
 }
 </style>

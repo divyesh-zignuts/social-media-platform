@@ -1,8 +1,14 @@
 <script lang="ts" setup>
-import PersonalInformation from '@/components/user/PersonalInformation.vue'
-import $http from '@/plugins/axios'
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import PersonalInformation from '@/components/user/PersonalInformation.vue';
+import $http from '@/plugins/axios';
+import { useHead } from '@unhead/vue';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+// change page title using this useHead
+useHead({
+  title: 'SMP | User Profile',
+})
 
 // composable
 const route = useRoute()
@@ -33,15 +39,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section>
-    <VRow>
-      <VCol xl="6" lg="6" md="6" sm="6" cols="12">
-        <PersonalInformation type="other_user_profile" :user-data="userData" />
-      </VCol>
-    </VRow>
-  </section>
-
-
+  <div>
+    <section>
+      <VRow>
+        <VCol xl="6" lg="6" md="6" sm="6" cols="12">
+          <PersonalInformation type="other_user_profile" :user-data="userData" />
+        </VCol>
+      </VRow>
+    </section>
+  </div>
 </template>
 
 <style lang="scss"></style>
