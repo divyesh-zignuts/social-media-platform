@@ -37,6 +37,7 @@ Route::namespace('API')->group(function () {
             Route::post('commentUpdate', 'commentUpdate');
             Route::post('commentDelete/{id}', 'commentDelete');
             Route::post('report', 'report');
+            Route::get('trending', 'trending');
         });
     });
 });

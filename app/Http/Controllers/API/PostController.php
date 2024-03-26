@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API;
 use finfo;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Report;
 use App\Models\PostAsset;
+use App\Models\PostComment;
 use Illuminate\Http\Request;
 use App\Http\Traits\FileUpload;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\PostComment;
-use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -303,5 +304,37 @@ class PostController extends Controller
         ]);
 
         return ok(__('strings.success', ['name' => 'Report']), ['report' => $report]);
+    }
+
+    public function trending(Request $request)
+    {
+        $userId = Auth::user()->id;
+
+        $posts = Post::select('id', 'user_id', 'bio')
+            ->with([
+                'assets:id,post_id,type,asset_url',
+                'user:id,first_name,last_name,profile_image_url',
+                'likes' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                }
+            ])
+            ->withCount('likes')
+            ->withCount('comments')
+            ->whereNotIn('id', function ($query) use ($userId) {
+                $query->select('post_id')
+                    ->from('reports')
+                    ->where('reported_by', $userId);
+            })
+            ->orderByRaw('likes_count + comments_count DESC')
+            ->get();
+
+        // Add the 'liked_by_user' attribute to each post
+        $posts->each(function ($post) {
+            $post->liked_by_user = $post->likes->isNotEmpty();
+        });
+
+        return ok(__('strings.success', ['name' => 'Posts list get']), [
+            'posts'     =>  $posts
+        ]);
     }
 }
