@@ -58,26 +58,48 @@ const resolveStatusVariant = (status: string) => {
     return { color: 'error', text: 'Rejected' }
 }
 
-const actionsItems = [
-  {
-    title: 'View',
-    value: 'view',
-    id: 1,
-    action: 'viewDetails',
-  },
-  {
-    title: 'Delete',
-    value: 'delete',
-    id: 2,
-    action: 'delete',
-  },
-  {
-    title: 'Approve/Reject',
-    value: 'approveReject',
-    id: 3,
-    action: 'approveReject',
+const actionList = (item: any) => {
+  console.log('item: ', item?.status);
+
+  if (item?.status === 'P') {
+    return [
+      {
+        title: 'View',
+        value: 'view',
+        id: 1,
+        action: 'viewDetails',
+      },
+      {
+        title: 'Delete',
+        value: 'delete',
+        id: 2,
+        action: 'delete',
+      },
+      {
+        title: 'Approve/Reject',
+        value: 'approveReject',
+        id: 3,
+        action: 'approveReject',
+      },
+    ]
   }
-]
+  else {
+    return [
+      {
+        title: 'View',
+        value: 'view',
+        id: 1,
+        action: 'viewDetails',
+      },
+      {
+        title: 'Delete',
+        value: 'delete',
+        id: 2,
+        action: 'delete',
+      },
+    ]
+  }
+}
 
 const handleAction = (val: object, id: string) => {
   if (val.value === 'view') {
@@ -200,7 +222,7 @@ onMounted(async () => {
                   </template>
 
                   <VCard>
-                    <VList v-for="i in actionsItems" :key="i?.id">
+                    <VList v-for="i in actionList(item.props.title)" :key="i?.id">
                       <VListItem @click="handleAction(i, item.props.title.id)">
                         <template #title>
                           {{ i?.title }}
