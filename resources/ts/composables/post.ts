@@ -21,7 +21,8 @@ export const post = {
   },
   getTrendingPostList: async () => {
     try {
-    await axios.get('/post/trending')
+    const url = post.checkLogin() ? '/post/auth-trending' : '/post/trending';
+    await axios.get(url)
       .then(function (response) {
         post.postList.value = response.data.data.posts
         return post.postList.value;
