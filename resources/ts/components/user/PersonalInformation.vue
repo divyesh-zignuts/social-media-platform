@@ -18,66 +18,81 @@ const getUserLabel = computed(() => {
 
 <template>
   <div>
-  <section>
-    <VCard class="personal-details__card">
-      <VCardTitle>
-        <div class="d-flex justify-lg-space-between pa-8">
-          <div>
-            <h3>Personal information</h3>
+    <section>
+      <VCard class="personal-details__card">
+        <VCardTitle>
+          <div class="d-flex justify-lg-space-between pa-8">
+            <div>
+              <h3>Personal information</h3>
+            </div>
           </div>
-        </div>
-      </VCardTitle>
-      <VCardText>
-        <VRow>
-          <VCol cols="4">
-            <div class="d-flex align-center justify-center">
-              <VAvatar color="primary" size="120">
-                <VImg v-if="!isEmpty(props?.userData?.profile_image_url)" :src="props?.userData?.profile_image_url" />
-                <span v-else class="profile-initial">{{ props?.userData?.first_name?.charAt(0) }}
-                </span>
-              </VAvatar>
-            </div>
-            <div class="d-flex align-center justify-center mt-5">
-              {{ getUserLabel }}
-            </div>
-          </VCol>
-          <VCol cols="8">
-            <div class="d-flex">
-              <div class="personal-details__keys">
-                Name:
+        </VCardTitle>
+        <VCardText>
+          <VRow>
+            <VCol cols="4">
+              <div class="d-flex align-center justify-center">
+                <VAvatar color="primary" size="120">
+                  <VImg v-if="!isEmpty(props?.userData?.profile_image_url)" :src="props?.userData?.profile_image_url" />
+                  <span v-else class="profile-initial">{{ props?.userData?.first_name?.charAt(0) }}
+                  </span>
+                </VAvatar>
               </div>
-              <div class="personal-details__values">
-                {{ props?.userData?.first_name }}
-                {{ props?.userData?.last_name }}
+              <div class="d-flex align-center justify-center mt-5">
+                {{ getUserLabel }}
               </div>
-            </div>
-            <div class="d-flex">
-              <div class="personal-details__keys">
-                Email Address:
+            </VCol>
+            <VCol cols="8">
+              <div class="d-flex">
+                <div class="personal-details__keys">
+                  Name:
+                </div>
+                <div class="personal-details__values">
+                  {{ props?.userData?.first_name }}
+                  {{ props?.userData?.last_name }}
+                </div>
               </div>
-              <div class="personal-details__values">
-                {{ props?.userData?.email }}
+              <div class="d-flex">
+                <div class="personal-details__keys">
+                  Email Address:
+                </div>
+                <div class="personal-details__values">
+                  {{ props?.userData?.email }}
+                </div>
               </div>
-            </div>
-            <div class="d-flex">
-              <div class="personal-details__keys">
-                Contact Number:
+              <div class="d-flex">
+                <div class="personal-details__keys">
+                  Contact Number:
+                </div>
+                <div class="personal-details__values">
+                  {{ props?.userData?.phone }}
+                </div>
               </div>
-              <div class="personal-details__values">
-                {{ props?.userData?.phone }}
-              </div>
-            </div>
-          </VCol>
-        </VRow>
-      </VCardText>
-    </VCard>
-  </section>
-</div>
+            </VCol>
+          </VRow>
+        </VCardText>
+      </VCard>
+    </section>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .profile-initial {
   font-size: 100px;
   text-transform: capitalize;
+}
+
+.personal-details__keys {
+  color: #000;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.personal-details__values {
+  align-items: center;
+  padding: 0.1875rem;
+  color: gray;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-inline-start: 0.3125rem;
 }
 </style>
